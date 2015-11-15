@@ -89,6 +89,10 @@ class DataTools:
             pickle.dump(allNodesCC, cchandle)   
         return allNodesCC
 
+    def loadCC(self, readPath):
+        with open(readPath, 'rb') as readhandle:
+            allCC = pickle.load(readhandle)
+        return allCC
 
 
 if __name__ == '__main__':
