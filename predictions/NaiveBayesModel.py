@@ -14,8 +14,11 @@ class NaiveBayesModel:
 
 
     def linkPredictionScore(self, x, y, nodes_neighbors, allNodesCC):
-        sx = set(nodes_neighbors.get(x))
-        sy = set(nodes_neighbors.get(y))
+        xnei = nodes_neighbors.get(x,  None)
+        ynei = nodes_neighbors.get(y, None)
+        if not xnei or not ynei: return 0;
+        sx = set(xnei)
+        sy = set(ynei)
         #compute the intersection of x and y
         s_xy = sx & sy
         intersection_xy = list(s_xy)
@@ -23,7 +26,9 @@ class NaiveBayesModel:
         coefficient = (self.len_U / self.len_E - 1) ** (size - 1)
         socre_xy = 1.0
         for node in intersection_xy:
-            node_neighbor = set(nodes_neighbors.get(node))
+            n_nei = nodes_neighbors.get(node, None)
+            if not n_nei: continue
+            node_neighbor = set(n_nei)
             #C(node) = F(x) & F(y) & F(node) U (x,y)
             Cn = node_neighbor & s_xy | {x, y}
             node_NCCC = self.compute_NCCC(Cn, node_neighbor, nodes_neighbors, allNodesCC)
@@ -38,12 +43,15 @@ class NaiveBayesModel:
     def compute_NCCC(self, Cn, node_neighbor, nodes_neighbors, allNodesCC):
         denominator = numerator = 0.0
         for i in Cn:
-            i_degree = len(node_neighbor.get(i, 0))
-            if i_degree == 0: continue
+            i_nei = nodes_neighbors.get(i, 0)
+            if i_nei == 0: continue
+            i_degree = len(i_nei)
             i_cc = allNodesCC.get(i, 0)
             numerator += (1/i_degree + i_cc)
         for j in node_neighbor:
-            j_degree = len(node_neighbor.get(j, 0))
+            j_nei = nodes_neighbors.get(j, 0)
+            if j_nei == 0: continue
+            j_degree = len(j_nei)
             if j_degree == 0: continue
             j_cc = allNodesCC.get(j, 0)
             denominator += (1/j_degree + j_cc)

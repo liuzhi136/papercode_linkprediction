@@ -50,7 +50,7 @@ class DataTools:
         return allNodes,self.allTrainLinks
     
     #set the dict format train data into the {node:neighbors,...} and return test data and train data
-    def getNode_neighbors(self, allTrains, testkey):
+    def getNode_neighbors(self, allTrains, testKey):
         self.testdata = [link.replace('\t', '-') for link in allTrains[testKey]]
         keys = list(allTrains.keys())
         keys.remove(testKey)
