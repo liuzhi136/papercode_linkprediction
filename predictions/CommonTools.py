@@ -63,6 +63,13 @@ class DataTools:
                     self.traindata_node_neighbors[nodes[0]].append(nodes[1])
                 else:
                     self.traindata_node_neighbors[nodes[0]] = [nodes[1]]
+        for node in self.allNodes:
+            if not node in self.traindata_node_neighbors:
+                self.traindata_node_neighbors[node] = []
+                for key in self.traindata_node_neighbors:
+                    if not key == node and node in self.traindata_node_neighbors[key]:
+                        self.traindata_node_neighbors[node].append(key)
+        
     
     def computeAllNodesCC(self, storeCCPath):
         allNodesCC = {}
